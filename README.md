@@ -1,7 +1,9 @@
 
 # MicroPython class for OV2640 Camera - working with Raspberry Pico / Pico W
 
-I adapted the code written by namato (https://github.com/namato/micropython-ov2640) to make it work with Raspberry Pico / Pico W or potentially other RP2040 devices. I changed the frequency and baud rate and added the required ID field for the I2C initialization.
+I adapted the code written by namato (https://github.com/namato/micropython-ov2640) to make it work with Raspberry Pico / Pico W or potentially other RP2040 devices. I changed the frequency and baud rate and added the required ID field for the I2C initialization. I increased the sleep time in line 41 of the 'ov2640.py' file, which prevented the first picture coming out corrupted. The first picture always comes out not well exposed though, I have no idea how to fix this.
+
+You may want to experiment a bit with the frequencies and timeouts, I believe this has the potential to be better optimized.
 
 Namato wrote:
 """
