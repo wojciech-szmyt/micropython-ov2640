@@ -8,20 +8,22 @@ import uos
 import gc
 
 class ov2640(object):
-    def __init__(self, sclpin=5, sdapin=4, cspin=2, resolution=OV2640_320x240_JPEG):
+    def __init__(self, sclpin=15, sdapin=14, cspin=13, mosipin=11, misopin=12, idSPI=1, idI2C=1,
+                 spiBaudRate=8000000, i2cBaudRate=100000, resolution=OV2640_320x240_JPEG):
         self.sdapin=sdapin
         self.sclpin=sclpin
         self.cspin=cspin
         self.standby = False
-
-        self.hspi = machine.SPI(1, baudrate=80000000, polarity=0, phase=0)
-        self.i2c = machine.I2C(scl=machine.Pin(5), sda=machine.Pin(4), freq=1000000)
+        #self.hspi = machine.SPI(idSPI, baudrate=10000000, polarity=0, phase=0, sck=machine.Pin(10), mosi=machine.Pin(mosipin), miso=machine.Pin(misopin) ) #WORKING
+        #self.i2c = machine.I2C(idI2C, scl=machine.Pin(sclpin), sda=machine.Pin(sdapin), freq=100000)                                                       #WORKING
+        self.hspi = machine.SPI(idSPI, baudrate=spiBaudRate, polarity=0, phase=0, sck=machine.Pin(10), mosi=machine.Pin(mosipin), miso=machine.Pin(misopin) )
+        self.i2c = machine.I2C(idI2C, scl=machine.Pin(sclpin), sda=machine.Pin(sdapin), freq=i2cBaudRate)
     
         # first init spi assuming the hardware spi is connected
-        self.hspi.init(baudrate=2000000)
+        self.hspi.init(baudrate=spiBaudRate)
 
         # chip select -- active low
-        self.cspin = machine.Pin(2, machine.Pin.OUT)
+        self.cspin = machine.Pin(cspin, machine.Pin.OUT)
         self.cspin.on()
 
         # init the i2c interface
@@ -36,7 +38,7 @@ class ov2640(object):
         self.i2c.writeto_mem(SENSORADDR, 0x12, b'\x80')
        
         # let it come up
-        time.sleep_ms(100)
+        time.sleep_ms(500)
     
         # jpg init registers
         cam_write_register_set(self.i2c, SENSORADDR, OV2640_JPEG_INIT)
@@ -169,7 +171,7 @@ def appendbuf(fn, picbuf, howmany):
         f.close()
     except OSError:
         print("error writing file")
-    print("write %d bytes from buffer" % howmany)
+    #print("write %d bytes from buffer" % howmany)
 
 def cam_spi_write(address, value, hspi, cspin):
     cspin.off()
