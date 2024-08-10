@@ -6,6 +6,7 @@ I adapted the code written by namato (https://github.com/namato/micropython-ov26
 You may want to experiment a bit with the frequencies and timeouts, I believe this has the potential to be better optimized.
 
 Namato wrote:
+
 """
 This is a basic interface to the [ArduCAM OV2640](http://www.arducam.com/camera-modules/2mp-ov2640/) under MicroPython for the ESP8266.  I wrote this because I could not find any good camera interfaces with MicroPython on the ESP8266.
 
